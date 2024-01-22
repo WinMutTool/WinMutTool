@@ -1,0 +1,11 @@
+#ifndef LLVM_MUTATIONIDDECL_H
+#define LLVM_MUTATIONIDDECL_H
+
+extern "C" {
+
+extern int HOLDER[1024];
+#define MUTATION_ID (HOLDER[0])
+#define MUTATION_ID_LOCAL (HOLDER[1])
+}
+
+#endif // LLVM_MUTATIONIDDECL_H

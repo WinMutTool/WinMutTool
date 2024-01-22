@@ -1,0 +1,24 @@
+diff -rNu WA-no/Makefile WA/Makefile
+--- WA-no/Makefile	2016-12-21 00:26:08.000000000 +0800
++++ WA/Makefile	2020-03-03 04:28:39.693561901 +0800
+@@ -52,7 +52,7 @@
+ all:	$(PLAT)
+ 
+ $(PLATS) clean:
+-	cd src && $(MAKE) $@
++	cd src && $(MAKE) $@ MYCFLAGS="${CFLAGS}" MYLIBS="-lLLVMWinMutRuntime"
+ 
+ test:	dummy
+ 	src/lua -v
+diff -rNu WA-no/src/Makefile WA/src/Makefile
+--- WA-no/src/Makefile	2015-05-27 19:10:11.000000000 +0800
++++ WA/src/Makefile	2020-03-03 04:28:49.773662551 +0800
+@@ -6,7 +6,7 @@
+ # Your platform. See PLATS for possible values.
+ PLAT= none
+ 
+-CC= gcc -std=gnu99
++#CC= gcc -std=gnu99
+ CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_2 $(SYSCFLAGS) $(MYCFLAGS)
+ LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
+ LIBS= -lm $(SYSLIBS) $(MYLIBS)

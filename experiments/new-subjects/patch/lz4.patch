@@ -1,0 +1,12 @@
+diff -rNu WA/tests/Makefile DMA/tests/Makefile
+--- WA/tests/Makefile	2019-08-15 19:59:59.000000000 +0800
++++ DMA/tests/Makefile	2020-03-02 17:51:09.805776685 +0800
+@@ -34,7 +34,7 @@
+ PYTHON  ?= python3
+ 
+ DEBUGLEVEL?= 1
+-DEBUGFLAGS = -g -DLZ4_DEBUG=$(DEBUGLEVEL)
++DEBUGFLAGS = -DLZ4_DEBUG=$(DEBUGLEVEL)
+ CFLAGS  ?= -O3 # can select custom optimization flags. For example : CFLAGS=-O2 make
+ CFLAGS  += -Wall -Wextra -Wundef -Wcast-qual -Wcast-align -Wshadow \
+            -Wswitch-enum -Wdeclaration-after-statement -Wstrict-prototypes \

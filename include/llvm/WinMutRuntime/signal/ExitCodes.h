@@ -1,0 +1,18 @@
+#ifndef LLVM_EXITCODES_H
+#define LLVM_EXITCODES_H
+
+enum ExitCodes {
+  SUCC = 0,
+  ENV_ERR,
+  ILL_STATE_ERR,
+  MUT_TP_ERR,
+  MALLOC_ERR,
+  FOPEN_ERR,
+  OPCD_ERR,
+  TIMEOUT_ERR,
+  SIGSEGV_ERR,
+  SIGABRT_ERR,
+  SIGFPE_ERR
+};
+
+#endif // LLVM_EXITCODES_H
