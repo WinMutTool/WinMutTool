@@ -52,6 +52,21 @@ We provided a python script to analyze the results:
 
 `experiments/analysis/mutation_score.py` reads the ``winmut-log-dir/run` directory to analyze mutation execution results and calculate mutation score.
 
+
+The script will output two mutation scores, corresponding to `killed/generated` and `killed/covered`.  
+Notes on other script output information:
+   
+   | Output                             | Description                                      |
+   |-----------------------------------|------------------------------------------|
+   | KILLED_BY_PROC_OUTPUT            | Number of mutants killed by inconsistency with original program output                |
+   | KILLED_BY_PROC_END_STATUS        | Number of mutants killed by inconsistency with original program end status            |
+   | KILLED_BY_BOTH                   | Number of mutants killed by inconsistency with original program output and end status|
+   | SURVIVED_NOT_AFFECT_STATUS       | Number of mutants survived because they do not affect the program's end status        |
+   | SURVIVED_NOT_AFFECT_OUTPUT       | Number of mutants survived because they do not affect the program's output        |
+   | SURVIVED_BY_BOTH                 | Number of mutants survived because they do not affect the program's end status and end status|
+   | SURVIVED_NOT_COVERED             | Number of mutants survived because they are not covered                |
+
+
 Examples:
 ```shell
 python3.8 ../analysis/mutation_score.py pcre2/WinMut/winmut-log-dir/run
