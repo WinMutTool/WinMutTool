@@ -7,12 +7,6 @@ basic infomation
 - **Fewer Processes**: Merge more mutants into one process
 - **Smaller Overheads**: Remove redundant interpreter calls
 
-## 🖥️ Online demo
-
-You can try the WinMut++ tool online on the [website](). We provide several small demo files.
-
-![demo](demo.gif)
-
 ## 📚 Usage
 
 ### 1. Install
