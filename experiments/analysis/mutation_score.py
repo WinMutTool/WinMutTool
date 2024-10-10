@@ -24,8 +24,6 @@ SURVIVED = [
             MutationStatus.SURVIVED_NOT_COVERED
            ]
 
-
-
 class Mutation:
     def __init__(self, m_type, sop, op_0, op_1, op_2):
         self.m_type = m_type
@@ -135,8 +133,6 @@ class MACase:
                         break
                 self.classifyMutationStatus(mut_id, mutation)
         self.checkClassifyConsistency()
-
-        
     
     def classifyMutationStatus(self,mut_id,  mutation):
         # assert isinstance(mutation, Mutation) and "classifyMutationStatus: not a Mutation class\n"
@@ -175,7 +171,7 @@ class MACase:
     def __str__(self) -> str:
         print(self.case_dir)
         ret = self.case_name
-        if len(self.all_mutation) - 1 == 0 :    # 确实就是这么神奇（grep case_162）
+        if len(self.all_mutation) - 1 == 0 : 
             ret += ": no mutation covered\n"
             return ret
 
@@ -224,7 +220,6 @@ class MACase:
                  survivied: {len(self.mutation_status_statistics_survived_set)}"
         ret += "\n"
         return ret
-
 
     def readProcTree(self, proc_tree_path):
         proc_tree = []
@@ -280,7 +275,6 @@ class MACase:
 
         return file_need_check, mut_id_need_check
 
-
     def isSameContent(self, file1_path, file2_path):
         # print(file1_path, file2_path)
         with open(file1_path, 'rb') as file1, open(file2_path, 'rb') as file2:  # 二进制打开对比，确实有不明原因的乱码，默认的utf-8无法识别
@@ -331,28 +325,6 @@ class MACase:
                         self.all_mutation[mut_id].mutation_status.append(MutationStatus.SURVIVED_NOT_AFFECT_STATUS)
                     else:
                         self.all_mutation[mut_id].mutation_status.append(MutationStatus.KILLED_BY_PROC_END_STATUS)
-
-            # if proc_end_status == ProcEndStatus.SAME_WITH_ORI:
-            #     for mut_id in eq_class_mut_id:
-            #         if mut_id != 0:
-            #             assert isinstance(self.all_mutation[mut_id], Mutation) and "checkProcEndStatus: not a Mutation class\n"
-            #             self.all_mutation[mut_id].not_covered = False
-            #             self.all_mutation[mut_id].mutation_status.append[MutationStatus.SURVIVED_NOT_AFFECT_STATUS]
-            # else:
-            #     if self.isSameProcEndStatus(proc, self.ori_end_status, self.ori_exit_or_signal_val):
-            #         for mut_id in eq_class_mut_id:
-            #             assert mut_id != 0 and "checkProcEndStatus: if need compare end status, it must not ori\n"
-            #             self.all_mutation[mut_id].not_covered = False
-            #             self.all_mutation[mut_id].mutation_status.append[MutationStatus.SURVIVED_NOT_AFFECT_STATUS]
-            #     else:
-            #         for mut_id in eq_class_mut_id:
-            #             assert mut_id != 0 and "checkProcEndStatus: if need compare end status, it must not ori\n"
-            #             self.all_mutation[mut_id].not_covered = False
-            #             self.all_mutation[mut_id].mutation_status.append[MutationStatus.KILLED_BY_PROC_END_STATUS]
-
-            
-
-            
     
     def getIdListFromTupleList(self, eq_class_tuple_list):
         eq_class_mut_id = []
@@ -408,7 +380,6 @@ class MACase:
         assert len(all_mutation) >= 1 and f"empty file: {all_mutation_path}"
         return all_mutation
         
-
 # case_in_run = {
 # 	case_0 : case_0_path,
 # 	case_1 : case_1_path,
@@ -423,18 +394,6 @@ def readCaseInRun(runlog_dir):
         assert os.path.isdir(item_path) and f"{item_path} not a case dir!\n"
         case_in_run[item] = item_path
     return case_in_run
-        
-
-# def cal_mutation_score(runlog_dir):
-#     error_list = []
-#     case_in_run = readCaseInRun(runlog_dir)
-#     for case_dir in case_in_run.values():
-#         try:
-#             print(MACase(case_dir))
-#         except Exception as e:
-#             error_list.append(case_dir)
-#             print("\033[91;1mError: \033[0m", case_dir)
-#     print(error_list)
     
 class Run:
     def __init__(self, runlog_dir) -> None:
@@ -484,7 +443,7 @@ class Run:
 
     def geometric_mean(self, arr):
         if not arr:
-            return None  # 处理空数组的情况，你可以根据实际需求返回适当的值
+            return None
 
         product = 1
         non_zero_arr = [num for num in arr if not isclose(num, 0)]
@@ -526,26 +485,6 @@ class Run:
     def getRunStatJson(self):
         ret = {}
         ret['Summary'] = [
-            # {
-            #     'label': 'ms_min',
-            #     'ms_k2g': self.runStat.ms_k2g_min,
-            #     'ms_k2c': self.runStat.ms_k2c_min,
-            # },
-            # {
-            #     'label': 'ms_med',
-            #     'ms_k2g': self.runStat.ms_k2g_med,
-            #     'ms_k2c': self.runStat.ms_k2c_med,
-            # },
-            # {
-            #     'label': 'ms_max',
-            #     'ms_k2g': self.runStat.ms_k2g_max,
-            #     'ms_k2c': self.runStat.ms_k2c_max,
-            # },
-            # {
-            #     'label': 'ms_avg',
-            #     'ms_k2g': self.runStat.ms_k2g_avg,
-            #     'ms_k2c': self.runStat.ms_k2c_avg,
-            # },
             {
                 'label': 'Min.',
                 'ms_k2g': f"{self.runStat.ms_k2g_min * 100 :>6.2f}%",
@@ -574,17 +513,6 @@ class Run:
             
         ]
 
-        # ret['Summary'] = {
-        #     'ms_k2g_min': self.runStat.ms_k2g_min,
-        #     'ms_k2c_min': self.runStat.ms_k2c_min,
-        #     'ms_k2g_med': self.runStat.ms_k2g_med,
-        #     'ms_k2c_med': self.runStat.ms_k2c_med,
-        #     'ms_k2g_max': self.runStat.ms_k2g_max,
-        #     'ms_k2c_max': self.runStat.ms_k2c_max,
-        #     'ms_k2g_avg': self.runStat.ms_k2g_avg,
-        #     'ms_k2c_avg': self.runStat.ms_k2c_avg,
-        # }
-
         ret['MACases'] = {}
         self.maCaseList = sorted(self.maCaseList, key=lambda x: int(os.path.basename(x.case_dir ).strip().split('_')[1]))
         for maCase in self.maCaseList:
@@ -605,23 +533,6 @@ class Run:
                 {'label': 'survived_by_both',             'value': maCase.survived_by_both,},
                 {'label': 'survived_not_covered',         'value': maCase.survived_not_covered,},
             ]
-            # ret['MACases'][os.path.basename(maCase.case_dir)] = {
-            #     'case_name':                    maCase.case_name,
-            #     'generated':                    maCase.generated,
-            #     'killed':                       maCase.killed,
-            #     'uncovered':                    maCase.uncovered,
-            #     'covered':                      maCase.covered,
-            #     'ms_k2g':                       maCase.maCaseStat.ms_k2g,
-            #     'ms_k2c':                       maCase.maCaseStat.ms_k2c,
-            #     'killed_by_proc_output':        maCase.killed_by_proc_output,
-            #     'killed_by_proc_end_status':    maCase.killed_by_proc_end_status,
-            #     'killed_by_both':               maCase.killed_by_both,
-            #     'survived_not_affect_status':   maCase.survived_not_affect_status,
-            #     'survived_not_affect_output':   maCase.survived_not_affect_output,
-            #     'survived_by_both':             maCase.survived_by_both,
-            #     'survived_not_covered':         maCase.survived_not_covered,
-
-            # }
         return ret
 
     def initMACaseStatList(self, maCaseList):
