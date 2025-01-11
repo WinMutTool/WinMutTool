@@ -1,11 +1,8 @@
-# WinMutTool
+# WinMut-Turbo
 
-basic infomation
+An Effective Mutation Analysis Tool for Large-scale C Programs.
 
-## 🚀 Optimization techniques
-
-- **Fewer Processes**: Merge more mutants into one process
-- **Smaller Overheads**: Remove redundant interpreter calls
+You can check out our [video demostration](https://www.youtube.com/watch?v=jwkg1h_2OoY) of WinMut-Turbo
 
 ## 📚 Usage
 

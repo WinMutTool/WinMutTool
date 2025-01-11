@@ -4,14 +4,15 @@ import os
 from enum import Enum, auto
 import re
 from math import exp, log, isclose
+import pickle
 
 class MutationStatus(Enum):
-    KILLED_BY_PROC_OUTPUT = auto()          # 程序输出
-    KILLED_BY_PROC_END_STATUS = auto()      # 程序结束状态
+    KILLED_BY_PROC_OUTPUT = auto()
+    KILLED_BY_PROC_END_STATUS = auto()
 
-    SURVIVED_NOT_AFFECT_STATUS = auto()     # 未影响状态
-    SURVIVED_NOT_AFFECT_OUTPUT = auto()     # 未影响输出
-    SURVIVED_NOT_COVERED = auto()           # 未参与运行
+    SURVIVED_NOT_AFFECT_STATUS = auto()
+    SURVIVED_NOT_AFFECT_OUTPUT = auto()
+    SURVIVED_NOT_COVERED = auto()
 
 KILLED = [
             MutationStatus.KILLED_BY_PROC_END_STATUS,
@@ -41,7 +42,6 @@ class ProcEndStatus(Enum):
     SIGNALED = auto()
 
 class ProcTreeNode:
-    # TODO: mut_id_list 使用数组，或许可以换种高级方式
     def __init__(self, eq_class_tuple_list, proc_end_status, proc_exit_or_signal_val=0):
         self.eq_class_tuple_list = eq_class_tuple_list
         self.proc_end_status = proc_end_status
@@ -100,8 +100,7 @@ class MACase:
         self.all_mutation_num = len(self.all_mutation) - 1
         self.killed_mutation_num = 0
 
-        # 基于分流执行的方法，对一个 mut_id，可能会出现多种状态，以 killed 为准，
-        # 多个 killed 原因可以共存，但记录在 survived 中的 mut_id 不能有 killed
+
         self.mutation_status_statistics = {
             MutationStatus.KILLED_BY_PROC_OUTPUT        : set(),
             MutationStatus.KILLED_BY_PROC_END_STATUS    : set(),
@@ -123,7 +122,6 @@ class MACase:
                 continue
             else:
                 assert isinstance(self.all_mutation[mut_id], Mutation) and "cal_mutation_score: not a Mutation class\n"
-                # 前置，添加 MutationStatus.SURVIVED_NOT_COVERED 
                 if self.all_mutation[mut_id].not_covered:
                     self.all_mutation[mut_id].mutation_status.append(MutationStatus.SURVIVED_NOT_COVERED)
                 
@@ -148,14 +146,10 @@ class MACase:
                 self.mutation_status_statistics_survived_set.add(mut_id)
     
     def checkClassifyConsistency(self):
-        # 1. 出现在 killed中的 mut_id 必定不能出现在 SURVIVED_NOT_COVERED 中
         for mut_id in self.mutation_status_statistics_killed_set:
             assert mut_id not in self.mutation_status_statistics[MutationStatus.SURVIVED_NOT_COVERED]
-        # 2. 出现在 SURVIVED_NOT_COVERED 中的 mut_id，其对应的 mutation 应当只有这一条
         for mut_id in self.mutation_status_statistics[MutationStatus.SURVIVED_NOT_COVERED]:
             assert len(self.all_mutation[mut_id].mutation_status) == 1
-        # 3. KILLED 的所有 flag 可以和除了 SURVIVED_NOT_COVERED 共存    （已被 1 检查）
-        # 4. SURVIVED 中，NOT_AFFECT_STATUS 可以和 NOT_AFFECT_OUTPUT 共存，但不能和其他共存
         for mut_id in self.mutation_status_statistics[MutationStatus.SURVIVED_NOT_AFFECT_STATUS]:
             assert mut_id not in self.mutation_status_statistics[MutationStatus.KILLED_BY_PROC_END_STATUS] \
                    and mut_id not in self.mutation_status_statistics[MutationStatus.KILLED_BY_PROC_OUTPUT] \
@@ -164,7 +158,6 @@ class MACase:
             assert mut_id not in self.mutation_status_statistics[MutationStatus.KILLED_BY_PROC_END_STATUS] \
                    and mut_id not in self.mutation_status_statistics[MutationStatus.KILLED_BY_PROC_OUTPUT] \
                    and mut_id not in self.mutation_status_statistics[MutationStatus.SURVIVED_NOT_COVERED]
-        # 5. killed + survived = all_mutation
         assert len(self.mutation_status_statistics_killed_set) + len(self.mutation_status_statistics_survived_set) \
                 == len(self.all_mutation) - 1
         
@@ -394,6 +387,14 @@ def readCaseInRun(runlog_dir):
         assert os.path.isdir(item_path) and f"{item_path} not a case dir!\n"
         case_in_run[item] = item_path
     return case_in_run
+
+def save_to_file(data, file_path):
+    with open(file_path, 'wb') as file:
+        pickle.dump(data, file)
+
+def load_from_file(file_path):
+    with open(file_path, 'rb') as file:
+        return pickle.load(file)
     
 class Run:
     def __init__(self, runlog_dir) -> None:
@@ -453,6 +454,8 @@ class Run:
         for num in non_zero_arr:
             product *= num
 
+        if product == 0:
+            return 0
         geometric_mean_value = exp(log(product) / len(non_zero_arr))
         return geometric_mean_value
 
@@ -547,8 +550,14 @@ class Run:
         error_list = []
         for case_dir in case_in_run.values():
             try:
-                maCase = MACase(case_dir)
-                print(maCase)
+                file_path = os.path.join(case_dir, 'maCase.pkl')
+                try:
+                    maCase = load_from_file(file_path)
+                    print(maCase)
+                except:
+                    maCase = MACase(case_dir)
+                    save_to_file(maCase, file_path)
+                    print(maCase)
                 maCaseList.append(maCase)
             except Exception as e:
                 error_list.append(case_dir)
