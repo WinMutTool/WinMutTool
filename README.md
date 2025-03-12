@@ -2,13 +2,13 @@
 
 An Effective Mutation Analysis Tool for Large-scale C Programs.
 
-You can check out our [video demostration](https://www.youtube.com/watch?v=jwkg1h_2OoY) of WinMut-Turbo
+You can check out our [video demostration](https://www.youtube.com/watch?v=jwkg1h_2OoY) of WinMut-Turbo.
 
 ## 📚 Usage
 
 ### 1. Install
 
-You can build WinMut++ from source.
+You can build WinMut-Turbo from source.
 For specific build method and detailed information, please refer to [WinMut-README](WinMut-README.md).
 
 ### 2. Build & Execute
@@ -37,7 +37,7 @@ More usage can be found in [here](WinMut-README.md#running-the-experiments-from-
 
 ### 3. Mutation Score
 
-In order to analyze the running process and calculate the mutation score, WinMut++ outputs some log files to the directory `winmut-log-dir/run` when running.
+In order to analyze the running process and calculate the mutation score, WinMut-Turbo outputs some log files to the directory `winmut-log-dir/run` when running.
 
 We provided a python script to analyze the results:
 
